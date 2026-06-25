@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Trendhive - Login</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <input type="checkbox" id="toggler">
+    <label for="toggler" class="fas fa-bars"></label>
+    <a href="#" class="logo"> Trendhive <span>.</span></a>
+    <nav class="navbar">
+      <a href="home.html">Home</a>
+      <a href="about.html">About</a>
+      <a href="product.html">Products</a>
+      <a href="review.html">Review</a>
+      <a href="contact.html">Contact</a>
+      <a href="log_in.html">Log in</a>
+    </nav>
+    <div class="icons">
+      <a href="#" class="fas fa-heart"></a>
+      <a href="cart.html" class="fas fa-shopping-cart"></a>
+      <a href="log_in.html" class="fas fa-user"></a>
+    </div>
+  </header>
+
+  <section class="login-container">
+    <div class="login-box">
+      <h2>Login</h2>
+      <form id="loginForm">
+        <div class="input-box">
+          <input type="email" name="email" required autocomplete="off" autocapitalize="none" spellcheck="false">
+          <label>Email</label>
+        </div>
+        <div class="input-box">
+          <input type="password" name="password" required>
+          <label>Password</label>
+        </div>
+        <div class="remember-forgot">
+          <label><input type="checkbox"> Remember Me</label>
+          <a href="Forgot_pass.html">Forgot Password?</a>
+        </div>
+        <button type="submit" class="btn">Login</button>
+        <div class="register-link">
+          <p>Don't have an account? <a href="register.html">Register</a></p>
+        </div>
+      </form>
+    </div>
+  </section>
+
+  <script>
+    document.getElementById("loginForm").addEventListener("submit", async function(e) {
+      e.preventDefault();
+      const formData = new FormData(this);
+
+      try {
+        const response = await fetch("http://127.0.0.1:5000/login", {
+          method: "POST",
+          body: formData,
+          credentials: "include"
+        });
+        const result = await response.json();
+        alert(result.message);  // Only show Flask response
+      } catch (err) {
+        alert("Server error. Please try again.");
+      }
+    });
+  </script>
+</body>
+</html>

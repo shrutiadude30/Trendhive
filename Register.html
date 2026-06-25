@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Register - TrendHive</title>
+<style>
+* { box-sizing: border-box; }
+body {
+    font-family: Arial, sans-serif;
+    background-color: #ffe6f2;
+    margin: 0; padding: 0;
+    display: flex; justify-content: center; align-items: center; height: 100vh;
+}
+.register-container {
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    padding: 20px;
+    width: 100%;
+    max-width: 400px;
+    text-align: center;
+}
+.register-container h1 { color: #d4277e; margin-bottom: 20px; }
+.register-container input {
+    width: 100%; padding: 10px; margin: 10px 0;
+    border: 1px solid #ccc; border-radius: 5px;
+}
+.register-container button {
+    background-color: #d4277e; color: #fff;
+    border: none; padding: 10px 15px;
+    border-radius: 5px; cursor: pointer;
+}
+.register-container button:hover { background-color: #a01a62; transition: 0.3s; }
+.register-container a {
+    color: #d4277e; text-decoration: none; display: block; margin-top: 10px;
+}
+.register-container a:hover { text-decoration: underline; }
+</style>
+</head>
+<body>
+
+<div class="register-container">
+    <h1>Register</h1>
+    <form id="registerForm">
+        <input type="text" id="name" placeholder="Full Name" required>
+        <input type="email" id="email" placeholder="Email Address" required>
+        <input type="password" id="password" placeholder="Password" required>
+        <input type="password" id="confirm_password" placeholder="Confirm Password" required>
+        <button type="submit">Sign Up</button>
+    </form>
+    <a href="log_in.html">Already have an account? Login</a>
+</div>
+
+<script>
+document.getElementById("registerForm").addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const name = document.getElementById("name").value;
+    const email = document.getElementById("email").value;
+    const password = document.getElementById("password").value;
+    const confirm_password = document.getElementById("confirm_password").value;
+
+    try {
+        const response = await fetch("http://127.0.0.1:5000/register", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ username: name, email, password, confirm_password }),
+            credentials: "include"
+        });
+        const result = await response.json();
+        alert(result.message || result.error);
+        if(result.message) window.location.href = "log_in.html";
+    } catch (err) {
+        alert("Error connecting to server");
+        console.error(err);
+    }
+});
+</script>
+
+
+</body>
+</html>

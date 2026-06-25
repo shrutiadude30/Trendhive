@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>TrendHive - Payment</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Example theme: modern, clean, dark accent -->
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:400,600&display=swap" rel="stylesheet">
+    <style>
+        body {
+            background: #d3bac7;
+            color: #fff;
+            font-family: 'Montserrat', Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 420px;
+            margin: 60px auto;
+            background: #fff;
+            border-radius: 14px;
+            box-shadow: 0 4px 24px rgba(0,0,0,0.18);
+            padding: 32px 50px 24px 28px;
+        }
+        h2 {
+            text-align: center;
+            margin-bottom: 28px;
+            font-weight: 600;
+            color: #d4277e;
+            letter-spacing: 1px;
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #d4277e;
+        }
+        input[type="text"], input[type="number"], input[type="email"] {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 18px;
+            border: 2px solid #d4277e;
+            border-radius: 6px;
+            background: #fff;
+            color: #d4277e;
+            font-size: 1rem;
+            transition: background 0.2s, border-color 0.2s;
+        }
+        input[type="text"]:focus, input[type="number"]:focus, input[type="email"]:focus {
+            background: #f9f9f9;
+            outline: none;
+            border-color: #b51e65;
+        }
+        .row {
+            display: flex;
+            gap: 12px;
+        }
+        .row > div {
+            flex: 1;
+        }
+        button {
+            width: 100%;
+            padding: 14px;
+            background: #d4277e;
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: background 0.2s;
+        }
+        button:hover {
+            background: linear-gradient(90deg, #00b386 0%, #0056b3 100%);
+        }
+        .secure {
+            text-align: center;
+            margin-top: 18px;
+            font-size: 0.95rem;
+            color: #b5b8c5;
+        }
+        .payment-options {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            gap: 10px;
+        }
+        .payment-option-btn {
+            flex: 1;
+            padding: 10px 0;
+            background: #f3e6ef;
+            color: #d4277e;
+            border: 2px solid #d4277e;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s, color 0.2s;
+        }
+        .payment-option-btn.selected,
+        .payment-option-btn:hover {
+            background: #d4277e;
+            color: #fff;
+        }
+        .hidden {
+            display: none;
+        }
+        @media (max-width: 500px) {
+            .container {
+                padding: 18px 8px;
+            }
+            .payment-options {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Payment Details</h2>
+        <div class="payment-options">
+            <button type="button" class="payment-option-btn selected" onclick="selectPayment('card')">Card</button>
+            <button type="button" class="payment-option-btn" onclick="selectPayment('paytm')">Paytm</button>
+            <button type="button" class="payment-option-btn" onclick="selectPayment('phonepe')">PhonePe</button>
+            <button type="button" class="payment-option-btn" onclick="selectPayment('razorpay')">Razorpay</button>
+        </div>
+        <form id="card-form" method="POST" action="/process_payment">
+            <label for="name">Cardholder Name</label>
+            <input type="text" id="name" name="name" required placeholder="Full Name">
+
+            <label for="card">Card Number</label>
+            <input type="text" id="card" name="card" maxlength="19" required placeholder="1234 5678 9012 3456">
+
+            <div class="row">
+                <div>
+                    <label for="expiry">Expiry</label>
+                    <input type="text" id="expiry" name="expiry" maxlength="5" required placeholder="MM/YY">
+                </div>
+                <div>
+                    <label for="cvv">CVV</label>
+                    <input type="number" id="cvv" name="cvv" maxlength="4" required placeholder="123">
+                </div>
+            </div>
+
+            <label for="email">Email for Receipt</label>
+            <input type="email" id="email" name="email" required placeholder="you@email.com">
+
+            <button onclick="alert('Redirecting to payment gateway...')"  type="submit">Pay Now</button>
+        </form>
+        <form id="paytm-form" class="hidden" method="POST" action="/process_paytm">
+            <label for="paytm-mobile">Paytm Mobile Number</label>
+            <input type="text" id="paytm-mobile" name="paytm_mobile" maxlength="10" required placeholder="Enter Paytm number">
+            <label for="paytm-email">Email for Receipt</label>
+            <input type="email" id="paytm-email" name="paytm_email" required placeholder="you@email.com">
+            <button onclick="alert('Redirecting to Paytm payment gateway...')"  type="submit">Pay with Paytm</button>
+        </form>
+        <form id="phonepe-form" class="hidden" method="POST" action="/process_phonepe">
+            <label for="phonepe-mobile">PhonePe Mobile Number</label>
+            <input type="text" id="phonepe-mobile" name="phonepe_mobile" maxlength="10" required placeholder="Enter PhonePe number">
+            <label for="phonepe-email">Email for Receipt</label>
+            <input type="email" id="phonepe-email" name="phonepe_email" required placeholder="you@email.com">
+            <button onclick="alert('Redirecting to PhonePe payment gateway...')"  type="submit">Pay with PhonePe</button>
+        </form>
+        <form id="razorpay-form" class="hidden" method="POST" action="/process_razorpay">
+            <label for="razorpay-email">Email for Receipt</label>
+            <input type="email" id="razorpay-email" name="razorpay_email" required placeholder="you@email.com">
+            <button onclick="alert('Redirecting to Razorpay payment gateway...')"   type="submit">Pay with Razorpay</button>
+        </form>
+        <div class="secure">
+            <span>🔒 Secure &amp; encrypted payment</span>
+        </div>
+    </div>
+    <script>
+        function selectPayment(method) {
+            // Remove selected class from all buttons
+            document.querySelectorAll('.payment-option-btn').forEach(btn => btn.classList.remove('selected'));
+            // Add selected class to clicked button
+            document.querySelectorAll('.payment-option-btn').forEach(btn => {
+                if (btn.textContent.toLowerCase().includes(method)) btn.classList.add('selected');
+            });
+            // Hide all forms
+            document.getElementById('card-form').classList.add('hidden');
+            document.getElementById('paytm-form').classList.add('hidden');
+            document.getElementById('phonepe-form').classList.add('hidden');
+            document.getElementById('razorpay-form').classList.add('hidden');
+            // Show selected form
+            if (method === 'card') document.getElementById('card-form').classList.remove('hidden');
+            if (method === 'paytm') document.getElementById('paytm-form').classList.remove('hidden');
+            if (method === 'phonepe') document.getElementById('phonepe-form').classList.remove('hidden');
+            if (method === 'razorpay') document.getElementById('razorpay-form').classList.remove('hidden');
+        }
+    </script>
+</body>
+</html>

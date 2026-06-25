@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>TrendHive Shopping Cart</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        body {
+            background: #f8f9fa;
+            font-family: 'Segoe UI', Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        .cart-container {
+            max-width: 800px;
+            margin: 40px auto;
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+            padding: 32px 24px;
+        }
+        h1 {
+            color: #2d2d2d;
+            font-weight: 700;
+            letter-spacing: 1px;
+            margin-bottom: 24px;
+            text-align: center;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 32px;
+        }
+        th, td {
+            padding: 16px 12px;
+            text-align: left;
+        }
+        th {
+            background: #f1f3f6;
+            color: #444;
+            font-size: 1.1em;
+        }
+        tr {
+            border-bottom: 1px solid #ececec;
+        }
+        .cart-item-img {
+            width: 60px;
+            height: 60px;
+            object-fit: cover;
+            border-radius: 8px;
+            border: 1px solid #eee;
+        }
+        .qty-input {
+            width: 48px;
+            padding: 6px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            text-align: center;
+        }
+        .remove-btn {
+            background: #d4277e;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            padding: 8px 14px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background 0.2s;
+        }
+        .remove-btn:hover {
+            background: #d9363e;
+        }
+        .cart-summary {
+            text-align: right;
+            font-size: 1.2em;
+            margin-bottom: 24px;
+        }
+        .checkout-btn {
+            background: #4f8cff;
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            padding: 14px 36px;
+            font-size: 1.1em;
+            font-weight: 700;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .checkout-btn:hover {
+            background: #2563eb;
+        }
+        @media (max-width: 600px) {
+            .cart-container {
+                padding: 16px 4px;
+            }
+            th, td {
+                padding: 8px 4px;
+            }
+            .checkout-btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="cart-container">
+        <h1>Your Cart</h1>
+        <table>
+            <thead>
+                <tr>
+                    <th>Product</th>
+                    <th></th>
+                    <th>Price</th>
+                    <th>Qty</th>
+                    <th>Total</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody id="cart-items">
+                <!-- Example cart item row -->
+                <tr>
+                    <!-- <td>
+                        <img src="https://via.placeholder.com/60" alt="Product" class="cart-item-img">
+                    </td> -->
+                    <td>Trendy Sneakers</td>
+                    <td>$59.99</td>
+                    <td>
+                        <input type="number" class="qty-input" value="1" min="1">
+                    </td>
+                    <td>$59.99</td>
+                    <td>
+                        <button class="remove-btn">Remove</button>
+                    </td>
+                </tr>
+                <!-- More items can be dynamically added here -->
+            </tbody>
+        </table>
+        <div class="cart-summary">
+            <span>Subtotal: </span>
+            <span id="cart-subtotal">$59.99</span>
+        </div> 
+        <a href="payment.html">
+        <button class="checkout-btn">Proceed to Checkout</button></a>
+    </div>
+   <tbody id="cart-items"></tbody>
+...
+<script>
+  const cartItems = document.getElementById('cart-items');
+  const subtotalElem = document.getElementById('cart-subtotal');
+  let cart = JSON.parse(localStorage.getItem("cart")) || [];
+
+  function renderCart() {
+    cartItems.innerHTML = "";
+    let subtotal = 0;
+    cart.forEach((item, idx) => {
+      const total = item.price * item.qty;
+      subtotal += total;
+      cartItems.innerHTML += `
+        <tr>
+          
+          <td>${item.name}</td>
+          <td>₹${item.price}</td>
+          <td><input type="number" class="qty-input" value="${item.qty}" min="1" data-idx="${idx}"></td>
+          <td>₹${total.toFixed(2)}</td>
+          <td><button class="remove-btn" data-idx="${idx}">Remove</button></td>
+        </tr>`;
+    });
+    subtotalElem.textContent = `₹${subtotal.toFixed(2)}`;
+    localStorage.setItem("cart", JSON.stringify(cart));
+  }
+
+  cartItems.addEventListener("input", e => {
+    if (e.target.classList.contains("qty-input")) {
+      const idx = e.target.dataset.idx;
+      cart[idx].qty = parseInt(e.target.value) || 1;
+      renderCart();
+    }
+  });
+
+  cartItems.addEventListener("click", e => {
+    if (e.target.classList.contains("remove-btn")) {
+      const idx = e.target.dataset.idx;
+      cart.splice(idx, 1);
+      renderCart();
+    }
+  });
+
+  renderCart();
+</script>
+
+</body>
+</html>
